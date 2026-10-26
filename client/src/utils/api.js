@@ -19,6 +19,11 @@ async function request(path, { method = 'GET', body } = {}) {
   } catch {
     throw new Error('Cannot reach the analysis server. Is it running (npm run dev in /server)?');
   }
+  if (!(res.headers.get('content-type') || '').includes('application/json')) {
+    throw new Error(BASE
+      ? `The analysis server at ${BASE} returned an unexpected response (${res.status}).`
+      : 'The analysis server is not configured for this site. Set VITE_API_URL to the API URL and rebuild.');
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const err = new Error(data.error || `${res.status} ${res.statusText}`);
