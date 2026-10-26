@@ -10,7 +10,8 @@
   # Public values (they are shipped to every browser). Never put the service-role key here.
   VITE_SUPABASE_URL = "https://lxmpqprsopkdnfwanddr.supabase.co"
   VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Ii9sjoecCgxyMejocySEqw_TNuexqbI"
-  # Set VITE_API_URL in the Netlify UI to your Render API URL once it is deployed.
+  # Analysis API on Render (public URL; no trailing slash).
+  VITE_API_URL = "https://nlp-workbench-api.onrender.com"
 
 # Single-page app: let React Router handle deep links like /review or /runs/12
 [[redirects]]
