@@ -21,9 +21,67 @@ A research tool for analysing the articles and comments stored in Supabase. Rese
 5. **Client env**: copy `client/.env.example` to `client/.env` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
    Save it as UTF-8 **without BOM**, otherwise Vite will not see the first variable.
 6. **Run**: `npm run dev` starts the API on <http://localhost:3001> and the website on <http://localhost:5173>.
-7. **Test**: `npm test` (server unit tests).
+7. **Test**: `npm test` (server unit tests). For the end-to-end tests, see [Testing](#testing).
 
 Methods whose provider key is missing are shown as unavailable rather than failing.
+
+## Testing
+
+| Command | What it checks |
+| --- | --- |
+| `npm test` | Server unit tests: every analysis method and the proposal requirements, offline (`server/test`). |
+| `npm run test:e2e` | End-to-end tests of the live website and API, run in a real Chrome browser with Playwright (`e2e/`). |
+| `npm run test:all` | Both of the above. |
+
+Run the end-to-end tests after every deploy, or whenever you change the website or server.
+
+**One-time setup**
+
+1. `npm --prefix e2e install` (this also downloads Chromium).
+2. Copy `e2e/.env.example` to `e2e/.env` and set `E2E_SUPABASE_SERVICE_ROLE_KEY`.
+
+The suite uses the key only to create a throw-away `e2e-…@example.com` user and to delete it afterwards. The key stays on your machine because `.env` is git-ignored.
+
+**What the end-to-end suite covers** (about 50 tests, roughly 2 minutes)
+
+- **API** (`e2e/tests/api.spec.js`):
+  - Configuration and services, sign-in protection, CORS, and input validation.
+  - Project create, read, update and delete, with field errors.
+  - Every local method on real data (AFINN, VADER, cue-lexicon stance, stakeholder rules, LDA and NMF with coherence and seed reproducibility, target stance).
+  - The Hugging Face models.
+  - Saved runs, the results table and summary, and review decisions.
+  - Per-user isolation.
+  - Corpus keywords and concordance.
+- **Website, signed out** (`e2e/tests/ui-public.spec.js`): login page, deep links, dark-theme toggle and persistence, wrong-password message, forgot-password form, sign-up, and the session surviving a reload.
+- **Website, full workflow** (`e2e/tests/ui-workflow.spec.js`), run in order:
+  1. Dashboard counts.
+  2. Create a project (including its validation errors), then edit it.
+  3. Explore scoped to the project and select comments.
+  4. Analyze with AFINN and VADER, saved; check the results table and charts.
+  5. LDA topics.
+  6. Saved runs list and run detail.
+  7. Approve a result on the Review page.
+  8. Corpus keywords and concordance.
+  9. Method guide and theme.
+  10. Delete the runs and the project, then sign out.
+
+Everything the tests create is deleted at the end, including after a failed or aborted run.
+
+**Options** (environment variables or `e2e/.env`)
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `E2E_BASE_URL` | Netlify site | Website to test. Use `http://localhost:5173` while `npm run dev` is running. |
+| `E2E_API_URL` | Render API | API to test. Use `http://localhost:3001` locally. |
+| `E2E_OPENAI` | off | `1` also tests the OpenAI methods. This uses paid credits. |
+| `E2E_SKIP_HF` | off | `1` skips the Hugging Face tests, for example when the free quota has run out. |
+
+**Useful commands** (run inside `e2e/`)
+
+- `npm run test:api`: API tests only.
+- `npm run test:ui`: website tests only.
+- `npm run test:headed`: watch the browser while it runs.
+- `npm run report`: open the HTML report, which includes screenshots and traces of any failures.
 
 ## Workflow
 

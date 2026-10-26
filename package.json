@@ -6,6 +6,8 @@
     "install:all": "npm --prefix server install && npm --prefix client install",
     "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "test": "npm --prefix server test",
+    "test:e2e": "npm --prefix e2e test",
+    "test:all": "npm --prefix server test && npm --prefix e2e test",
     "build": "npm --prefix client run build",
     "build:prod": "npm --prefix server install --omit=dev && npm --prefix client install --include=dev && npm --prefix client run build",
     "start": "npm --prefix server start"
