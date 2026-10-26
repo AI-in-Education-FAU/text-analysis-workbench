@@ -82,11 +82,11 @@ The API keeps running analysis jobs in memory. Deploy it as **one always-on Node
    - Fill in `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY` and `HF_TOKEN`.
    - Set `CORS_ORIGIN` to your Netlify URL, for example `https://your-site.netlify.app`.
    - Note the API URL, for example `https://nlp-workbench-api.onrender.com`.
-3. On Netlify, choose Add new site → Import from Git and pick the repository. The build settings come from `netlify.toml`. Under Site configuration → Environment variables, add:
+3. On Netlify, choose Add new site → Import from Git and pick the repository. The build settings come from `netlify.toml`, which also sets these public values under `[build.environment]` (edit them there, or override them in Site configuration → Environment variables):
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_PUBLISHABLE_KEY`
    - `VITE_API_URL`, set to the Render URL with no trailing slash
-4. Deploy. If you change an environment variable later, redeploy, because Vite bakes the values in at build time.
+4. Deploy. If you change one of these values later, redeploy, because Vite bakes the values in at build time.
 5. In Supabase → Authentication → URL Configuration, add the Netlify URL as the Site URL and as a Redirect URL.
 
 ## Scope
