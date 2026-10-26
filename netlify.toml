@@ -1,0 +1,15 @@
+# Netlify hosts the React website (client/). The Express analysis API (server/)
+# must run on an always-on Node host (e.g. Render) — set VITE_API_URL to its URL.
+[build]
+  base = "client"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Single-page app: let React Router handle deep links like /review or /runs/12
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

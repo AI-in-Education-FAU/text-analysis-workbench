@@ -1,0 +1,22 @@
+# Render Blueprint for the analysis API (used when the website is hosted on Netlify).
+services:
+  - type: web
+    name: nlp-workbench-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SUPABASE_URL
+        value: https://lxmpqprsopkdnfwanddr.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
