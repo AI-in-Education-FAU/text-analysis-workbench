@@ -3,6 +3,7 @@ services:
   - type: web
     name: nlp-workbench-api
     runtime: node
+    plan: free
     rootDir: server
     buildCommand: npm install --omit=dev
     startCommand: npm start
