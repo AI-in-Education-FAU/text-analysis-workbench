@@ -113,8 +113,13 @@ alter table public.validation_decisions enable row level security;
 alter table public.reference_labels enable row level security;
 alter table public.analysis_runs enable row level security;
 
--- FR-1: only signed-in researchers may browse source records from the browser.
-drop policy if exists "read articles" on public.articles;
-create policy "read articles" on public.articles for select to authenticated using (true);
-drop policy if exists "read comments" on public.comments;
-create policy "read comments" on public.comments for select to authenticated using (true);
+-- FR-1: source records are browsable only by signed-in researchers through the workbench.
+-- To fully restrict anonymous access, also remove any anon SELECT policies on these tables
+-- once no other subsystem depends on them.
+-- Signed-in researchers need read access to the source tables from the browser.
+-- Uses workbench-specific policy names so existing team policies (e.g. the data-collection
+-- subsystem's anon insert/read policies) are left untouched.
+drop policy if exists "workbench read articles" on public.articles;
+create policy "workbench read articles" on public.articles for select to authenticated using (true);
+drop policy if exists "workbench read comments" on public.comments;
+create policy "workbench read comments" on public.comments for select to authenticated using (true);

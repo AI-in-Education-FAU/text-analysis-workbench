@@ -64,14 +64,13 @@ create index if not exists label_results_run_idx on public.label_results(run_id)
 create index if not exists comments_article_idx on public.comments(article_id);
 
 -- The analysis server uses the service-role key, which bypasses RLS.
--- The browser uses the publishable (anon) key to browse data, so allow read-only access
--- to the source tables. Remove these if your data must not be publicly readable and
--- add authenticated-only policies instead.
 alter table public.articles enable row level security;
 alter table public.comments enable row level security;
 
-drop policy if exists "read articles" on public.articles;
-create policy "read articles" on public.articles for select to anon, authenticated using (true);
-
-drop policy if exists "read comments" on public.comments;
-create policy "read comments" on public.comments for select to anon, authenticated using (true);
+-- Signed-in researchers need read access to the source tables from the browser.
+-- Uses workbench-specific policy names so existing team policies (e.g. the data-collection
+-- subsystem's anon insert/read policies) are left untouched.
+drop policy if exists "workbench read articles" on public.articles;
+create policy "workbench read articles" on public.articles for select to authenticated using (true);
+drop policy if exists "workbench read comments" on public.comments;
+create policy "workbench read comments" on public.comments for select to authenticated using (true);
