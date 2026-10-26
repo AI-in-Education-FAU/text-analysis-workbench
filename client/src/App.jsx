@@ -11,6 +11,7 @@ import Login from './pages/Login.jsx';
 import Projects from './pages/Projects.jsx';
 import Review from './pages/Review.jsx';
 import ReferenceLabels from './pages/ReferenceLabels.jsx';
+import { ThemeToggle } from './theme.jsx';
 
 function SelectionBadge() {
   const { selection } = useApp();
@@ -67,6 +68,7 @@ function Layout() {
           <div className="small" title={user?.email}>{user?.email}</div>
           <button className="link small" onClick={() => setRecovering(true)}>Change password</button>
           <button className="link small" onClick={signOut}>Sign out</button>
+          <div><ThemeToggle /></div>
         </div>
       </aside>
       <main className="content">

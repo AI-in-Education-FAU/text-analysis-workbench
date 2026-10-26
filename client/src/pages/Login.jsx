@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useApp } from '../AppContext';
 import { supabase } from '../utils/supabase';
+import { ThemeToggle } from '../theme.jsx';
 
 function friendlyError(err) {
   const code = err?.code || err?.error_code;
@@ -86,6 +87,7 @@ export default function Login() {
             {mode === 'signin' && <button type="button" className="link" onClick={() => setMode('reset')}>Forgot password?</button>}
           </div>
         )}
+        <div className="row small" style={{ justifyContent: 'center' }}><ThemeToggle /></div>
       </form>
     </div>
   );
