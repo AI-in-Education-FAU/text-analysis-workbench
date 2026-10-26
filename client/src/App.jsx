@@ -38,7 +38,7 @@ function ProjectPicker() {
 }
 
 function Layout() {
-  const { serverError, user, signOut } = useApp();
+  const { serverError, user, signOut, setRecovering } = useApp();
   const links = [
     ['/', 'Dashboard'],
     ['/projects', 'Projects'],
@@ -65,6 +65,7 @@ function Layout() {
         <SelectionBadge />
         <div className="user-box">
           <div className="small" title={user?.email}>{user?.email}</div>
+          <button className="link small" onClick={() => setRecovering(true)}>Change password</button>
           <button className="link small" onClick={signOut}>Sign out</button>
         </div>
       </aside>
@@ -89,9 +90,9 @@ function Layout() {
 }
 
 function Gate() {
-  const { session } = useApp();
+  const { session, recovering } = useApp();
   if (session === undefined) return <p className="muted" style={{ padding: '2rem' }}>Loading…</p>;
-  if (!session) return <Login />;
+  if (!session || recovering) return <Login />;
   return <Layout />;
 }
 

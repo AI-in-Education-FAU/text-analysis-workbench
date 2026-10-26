@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { api } from './utils/api';
-import { supabase } from './utils/supabase';
+import { openedFromRecoveryLink, supabase } from './utils/supabase';
 
 const AppContext = createContext(null);
 const STORAGE_KEY = 'nlp-workbench-selection';
@@ -19,6 +19,7 @@ export function AppProvider({ children }) {
   const [serverConfig, setServerConfig] = useState(null);
   const [serverError, setServerError] = useState(null);
   const [session, setSession] = useState(undefined);
+  const [recovering, setRecovering] = useState(openedFromRecoveryLink);
   const [projects, setProjects] = useState([]);
   const [projectId, setProjectIdState] = useState(() => localStorage.getItem(PROJECT_KEY) || '');
 
@@ -30,7 +31,12 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session ?? null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s ?? null));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      // A password-reset link signs the user in; ask for a new password before entering the app.
+      if (event === 'PASSWORD_RECOVERY') setRecovering(true);
+      if (event === 'SIGNED_OUT') setRecovering(false);
+      setSession(s ?? null);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -67,7 +73,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         selection, setSelection, serverConfig, serverError, refreshConfig,
-        session, user: session?.user || null, signOut,
+        session, user: session?.user || null, signOut, recovering, setRecovering,
         projects, refreshProjects, projectId: activeProject ? projectId : '', setProjectId, activeProject,
       }}
     >

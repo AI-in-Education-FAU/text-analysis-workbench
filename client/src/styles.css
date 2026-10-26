@@ -139,7 +139,7 @@ details summary { cursor: pointer; color: var(--accent); }
 .project-picker label { display: flex; flex-direction: column; gap: 0.25rem; color: #8a97a8; }
 .project-picker select { background: #22324a; color: #fff; border: 1px solid #2f4360; border-radius: 4px; padding: 0.3rem; }
 .user-box { padding: 0.5rem 1.25rem 0; border-top: 1px solid #2a384c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.user-box .link { color: #8fb3ff; padding: 0; }
+.user-box .link { color: #8fb3ff; padding: 0; margin-right: 0.75rem; }
 .multicheck { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-bottom: 0.5rem; }
 .tag.baseline { background: #f1ecdf; color: #7a5a12; }
 .tag.flag { background: #fff1e0; color: #a05a00; margin-right: 0.25rem; font-size: 0.72rem; }
